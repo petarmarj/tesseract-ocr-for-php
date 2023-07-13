@@ -1,7 +1,9 @@
-<?php namespace thiagoalessio\TesseractOCR;
+<?php
 
-class Process {
+namespace thiagoalessio\TesseractOCR;
 
+class Process
+{
     private $stdin;
     private $stdout;
     private $stderr;
@@ -16,12 +18,14 @@ class Process {
             array("pipe", "w"),
             array("pipe", "w")
         ];
-        $this->handle = proc_open($command, $streamDescriptors, $pipes, NULL, NULL, ["bypass_shell" => true]);
+        $this->handle = proc_open($command, $streamDescriptors, $pipes, null, null, ["bypass_shell" => true]);
         list($this->stdin, $this->stdout, $this->stderr) = $pipes;
 
         FriendlyErrors::checkProcessCreation($this->handle, $command);
 
-        //This is can avoid deadlock on some cases (when stderr buffer is filled up before writing to stdout and vice-versa)
+        // This is can avoid deadlock on some cases
+        // (when stderr buffer is filled up before writing
+        // to stdout and vice-versa)
         stream_set_blocking($this->stdout, 0);
         stream_set_blocking($this->stderr, 0);
     }
@@ -29,10 +33,9 @@ class Process {
     public function write($data, $len)
     {
         $total = 0;
-        do
-        {
+        do {
             $res = fwrite($this->stdin, substr($data, $total));
-        } while($res && $total += $res < $len);
+        } while ($res && $total += $res < $len);
         return $total === $len;
     }
 
@@ -41,8 +44,7 @@ class Process {
     {
         $running = true;
         $data = ["out" => "", "err" => ""];
-        while (($running === true) && !$this->hasTimedOut($timeout))
-        {
+        while (($running === true) && !$this->hasTimedOut($timeout)) {
             $data["out"] .= fread($this->stdout, 8192);
             $data["err"] .= fread($this->stderr, 8192);
             $procInfo = proc_get_status($this->handle);
@@ -66,15 +68,14 @@ class Process {
 
     private function hasTimedOut($timeout)
     {
-        return (($timeout > 0) &&  ($this->startTime + $timeout < microtime(true)));    
+        return (($timeout > 0) &&  ($this->startTime + $timeout < microtime(true)));
     }
-    
+
     private function closeStream(&$stream)
     {
-        if ($stream !== NULL)
-        {
+        if ($stream !== null) {
             fclose($stream);
-            $stream = NULL;
+            $stream = null;
         }
     }
 }
