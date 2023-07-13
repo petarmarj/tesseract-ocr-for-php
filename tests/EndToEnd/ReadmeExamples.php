@@ -9,10 +9,10 @@ use ReflectionObject;
 
 class ReadmeExamples extends TestCase
 {
-    private $executable = 'tesseract';
-    private $imagesDir  = './tests/EndToEnd/images';
+    private string $executable = 'tesseract';
+    private string $imagesDir  = './tests/EndToEnd/images';
 
-    public function testBasicUsage()
+    public function testBasicUsage(): void
     {
         $expected = "The quick brown fox\njumps over\nthe lazy dog.";
         $actual = (new TesseractOCR("{$this->imagesDir}/text.png"))
@@ -21,7 +21,7 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, str_replace(PHP_EOL, "\n", $actual));
     }
 
-    public function testOtherLanguages()
+    public function testOtherLanguages(): void
     {
         $expected = 'Bülowstraße';
         $actual = (new TesseractOCR("{$this->imagesDir}/german.png"))
@@ -31,9 +31,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testMultipleLanguages()
+    public function testMultipleLanguages(): void
     {
-      // training data for these versions return different output
+        // training data for these versions return different output
         if ($this->isVersion302() || $this->isVersion305()) {
             $this->skip();
         }
@@ -46,9 +46,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testInducingRecognition()
+    public function testInducingRecognition(): void
     {
-      // https://github.com/tesseract-ocr/tesseract/issues/751
+        // https://github.com/tesseract-ocr/tesseract/issues/751
         if ($this->isVersion302() || $this->isVersion4()) {
             $this->skip();
         }
@@ -61,9 +61,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testListAvailableLanguages()
+    public function testListAvailableLanguages(): void
     {
-      // feature not available in this version of tesseract
+        // feature not available in this version of tesseract
         if ($this->isVersion302()) {
             $this->skip();
         }
@@ -75,9 +75,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals(true, in_array('spa', $actual));
     }
 
-    public function testTemporaryFilesAreDeleted()
+    public function testTemporaryFilesAreDeleted(): void
     {
-      // https://github.com/thiagoalessio/tesseract-ocr-for-php/issues/169
+        // https://github.com/thiagoalessio/tesseract-ocr-for-php/issues/169
         $ocr = new TesseractOCR("{$this->imagesDir}/text.png");
         $ocr->run();
 
@@ -85,9 +85,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals(false, file_exists($ocr->command->getOutputFile(true)));
     }
 
-    public function testTemporaryFilesAreNotCreated()
+    public function testTemporaryFilesAreNotCreated(): void
     {
-      // Cannot read from stdin in version 3.02
+        // Cannot read from stdin in version 3.02
         if ($this->isVersion302()) {
             $this->skip();
         }
@@ -103,7 +103,7 @@ class ReadmeExamples extends TestCase
         $this->assertEquals(null, $outputFileValue);
     }
 
-    public function testTemporaryFilesAreDeletedInCaseOfException()
+    public function testTemporaryFilesAreDeletedInCaseOfException(): void
     {
 
         try {
@@ -116,9 +116,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals(false, file_exists($ocr->command->getOutputFile(true)));
     }
 
-    public function testWithoutInputFile()
+    public function testWithoutInputFile(): void
     {
-      // Cannot read from stdin in version 3.02
+        // Cannot read from stdin in version 3.02
         if ($this->isVersion302()) {
             $this->skip();
         }
@@ -132,9 +132,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, str_replace(PHP_EOL, "\n", $actual));
     }
 
-    public function testWithoutOutputFile()
+    public function testWithoutOutputFile(): void
     {
-      // Cannot write to stdout in version 3.02
+        // Cannot write to stdout in version 3.02
         if ($this->isVersion302()) {
             $this->skip();
         }
@@ -147,9 +147,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, str_replace(PHP_EOL, "\n", $actual));
     }
 
-    public function testWithoutFiles()
+    public function testWithoutFiles(): void
     {
-      // Cannot read from stdin and write to stdout in version 3.02
+        // Cannot read from stdin and write to stdout in version 3.02
         if ($this->isVersion302()) {
             $this->skip();
         }
@@ -163,9 +163,9 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, str_replace(PHP_EOL, "\n", $actual));
     }
 
-    public function testBacktickOnFilenames()
+    public function testBacktickOnFilenames(): void
     {
-      // skipping for now until I take the time to properly fix it
+        // skipping for now until I take the time to properly fix it
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             $this->skip();
         }
@@ -177,7 +177,7 @@ class ReadmeExamples extends TestCase
         $this->assertEquals($expected, str_replace(PHP_EOL, "\n", $actual));
     }
 
-    protected function isVersion302()
+    protected function isVersion302(): bool
     {
         exec('tesseract --version 2>&1', $output);
         $version = explode(' ', $output[0])[1];
@@ -185,7 +185,7 @@ class ReadmeExamples extends TestCase
         && version_compare($version, '3.03', '<');
     }
 
-    protected function isVersion305()
+    protected function isVersion305(): bool
     {
         exec('tesseract --version 2>&1', $output);
         $version = explode(' ', $output[0])[1];
@@ -193,7 +193,7 @@ class ReadmeExamples extends TestCase
         && version_compare($version, '3.06', '<');
     }
 
-    protected function isVersion4()
+    protected function isVersion4(): bool
     {
         exec('tesseract --version 2>&1', $output);
         $version = explode(' ', $output[0])[1];

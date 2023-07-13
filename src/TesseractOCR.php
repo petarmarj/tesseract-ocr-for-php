@@ -17,7 +17,7 @@ class TesseractOCR
         $this->image("$image");
     }
 
-    public function run($timeout = 0)
+    public function run($timeout = 0): string
     {
         try {
             if ($this->outputFile !== null) {
@@ -61,7 +61,7 @@ class TesseractOCR
         return trim($text, " \t\n\r\0\x0A\x0B\x0C");
     }
 
-    public function imageData($image, $size)
+    public function imageData(string|false $image, int|false $size): static
     {
         FriendlyErrors::checkTesseractVersion("3.03-rc1", "Reading image data from stdin", $this->command);
         $this->command->useFileAsInput = false;
@@ -70,7 +70,7 @@ class TesseractOCR
         return $this;
     }
 
-    public function withoutTempFiles()
+    public function withoutTempFiles(): static
     {
         FriendlyErrors::checkTesseractVersion(
             "3.03-rc1",
@@ -81,50 +81,50 @@ class TesseractOCR
         return $this;
     }
 
-    public function image($image)
+    public function image(string $image): static
     {
         $this->command->image = $image;
         return $this;
     }
 
-    public function executable($executable)
+    public function executable(string $executable): static
     {
         FriendlyErrors::checkTesseractPresence($executable);
         $this->command->executable = $executable;
         return $this;
     }
 
-    public function configFile($configFile)
+    public function configFile($configFile): static
     {
         $this->command->configFile = $configFile;
         return $this;
     }
 
-    public function tempDir($tempDir)
+    public function tempDir($tempDir): static
     {
         $this->command->tempDir = $tempDir;
         return $this;
     }
 
-    public function threadLimit($limit)
+    public function threadLimit($limit): static
     {
         $this->command->threadLimit = $limit;
         return $this;
     }
 
     // @deprecated
-    public function format($fmt)
+    public function format($fmt): static
     {
         return $this->configFile($fmt);
     }
 
-    public function setOutputFile($path)
+    public function setOutputFile($path): static
     {
         $this->outputFile = $path;
         return $this;
     }
 
-    public function allowlist()
+    public function allowlist(): static
     {
         $concat = function ($arg) {
             return is_array($arg) ? join('', $arg) : $arg;
@@ -134,7 +134,7 @@ class TesseractOCR
         return $this;
     }
 
-    public function whitelist()
+    public function whitelist(): static
     {
         $warningMsg = 'Notice: whitelist is deprecated, use allowlist instead.';
         trigger_error($warningMsg, E_USER_NOTICE);
@@ -171,22 +171,22 @@ class TesseractOCR
         return $this;
     }
 
-    private function isConfigFile($name)
+    private function isConfigFile($name): bool
     {
         return in_array($name, array('digits', 'hocr', 'pdf', 'quiet', 'tsv', 'txt'));
     }
 
-    private function isOption($name)
+    private function isOption($name): bool
     {
         return in_array($name, get_class_methods($this->getOptionClassName()));
     }
 
-    private function getOptionClassName()
+    private function getOptionClassName(): string
     {
         return __NAMESPACE__ . '\\Option';
     }
 
-    private function cleanTempFiles()
+    private function cleanTempFiles(): void
     {
         if (file_exists($this->command->getOutputFile(false))) {
             unlink($this->command->getOutputFile(false));

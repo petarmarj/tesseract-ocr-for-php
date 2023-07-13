@@ -9,32 +9,32 @@ use thiagoalessio\TesseractOCR\Tests\Unit\TestableCommand;
 
 class TesseractOCRTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->customTempDir = __DIR__ . DIRECTORY_SEPARATOR . 'custom-temp-dir';
         mkdir($this->customTempDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $files = glob(join(DIRECTORY_SEPARATOR, array($this->customTempDir, '*')));
         array_map('unlink', $files);
         rmdir($this->customTempDir);
     }
 
-    public function beforeEach()
+    public function beforeEach(): void
     {
         $this->tess = new TesseractOCR('image.png', new TestableCommand());
     }
 
-    public function testSimplestUsage()
+    public function testSimplestUsage(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile"';
         $actual = $this->tess->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testDelayedSettingOfImagePath()
+    public function testDelayedSettingOfImagePath(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile"';
 
@@ -45,7 +45,7 @@ class TesseractOCRTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testCustomExecutablePath()
+    public function testCustomExecutablePath(): void
     {
       // skipping for now until I take the time to properly fix it
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
@@ -57,49 +57,49 @@ class TesseractOCRTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testDefiningOptions()
+    public function testDefiningOptions(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" -l eng hocr';
         $actual = $this->tess->lang('eng')->format('hocr')->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testAllowlistSingleStringArgument()
+    public function testAllowlistSingleStringArgument(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" -c "tessedit_char_whitelist=abcdefghij"';
         $actual = $this->tess->allowlist('abcdefghij')->command;
         $this->assertEquals("$expected", $actual);
     }
 
-    public function testAllowlistMultipleStringArguments()
+    public function testAllowlistMultipleStringArguments(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" -c "tessedit_char_whitelist=abcdefghij"';
         $actual = $this->tess->allowlist('ab', 'cd', 'ef', 'gh', 'ij')->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testAllowlistSingleArrayArgument()
+    public function testAllowlistSingleArrayArgument(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" -c "tessedit_char_whitelist=abcdefghij"';
         $actual = $this->tess->allowlist(range('a', 'j'))->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testAllowlistMultipleArrayArguments()
+    public function testAllowlistMultipleArrayArguments(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" -c "tessedit_char_whitelist=abcdefghij"';
         $actual = $this->tess->allowlist(range('a', 'e'), range('f', 'j'))->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testAllowlistMixedArguments()
+    public function testAllowlistMixedArguments(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" -c "tessedit_char_whitelist=0123456789abcdefghij"';
         $actual = $this->tess->allowlist(range(0, 9), 'abcd', range('e', 'j'))->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testDefiningConfigPairs()
+    public function testDefiningConfigPairs(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" '
         . '-c "load_system_dawg=F" '
@@ -108,7 +108,7 @@ class TesseractOCRTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testDefiningConfigFile()
+    public function testDefiningConfigFile(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" tsv';
         $actual = $this->tess->configFile('tsv')->command;
@@ -116,56 +116,56 @@ class TesseractOCRTest extends TestCase
     }
 
   // @deprecated
-    public function testDefiningFormat()
+    public function testDefiningFormat(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" tsv';
         $actual = $this->tess->format('tsv')->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testDigits()
+    public function testDigits(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" digits';
         $actual = $this->tess->digits()->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testHocr()
+    public function testHocr(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" hocr';
         $actual = $this->tess->hocr()->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testPdf()
+    public function testPdf(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" pdf';
         $actual = $this->tess->pdf()->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testQuiet()
+    public function testQuiet(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" quiet';
         $actual = $this->tess->quiet()->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testTsv()
+    public function testTsv(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" tsv';
         $actual = $this->tess->tsv()->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testTxt()
+    public function testTxt(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" txt';
         $actual = $this->tess->txt()->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testCustomTempDir()
+    public function testCustomTempDir(): void
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             $this->skip();
@@ -179,7 +179,7 @@ class TesseractOCRTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testCustomTempDirWindows()
+    public function testCustomTempDirWindows(): void
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
             $this->skip();
@@ -198,21 +198,21 @@ class TesseractOCRTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testThreadLimit()
+    public function testThreadLimit(): void
     {
         $expected = 'OMP_THREAD_LIMIT=4 "tesseract" "image.png" "tmpfile"';
         $actual = $this->tess->threadLimit(4)->command;
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testVersion()
+    public function testVersion(): void
     {
         $expected = '3.05';
         $actual = $this->tess->version();
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testSetOutputFile()
+    public function testSetOutputFile(): void
     {
         $expected = '"tesseract" "image.png" "tmpfile" pdf';
         $actual = $this->tess->configFile('pdf')->setOutputFile('/foo/bar.pdf')->command;

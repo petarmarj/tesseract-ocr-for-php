@@ -11,6 +11,9 @@ use thiagoalessio\TesseractOCR\UnsuccessfulCommandException;
 
 class FriendlyErrors extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testImageNotFound()
     {
         $currentDir = realpath(
@@ -31,6 +34,9 @@ class FriendlyErrors extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testExecutableNotFound()
     {
         $currentPath = getenv('PATH');
@@ -54,6 +60,9 @@ class FriendlyErrors extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testExecutableNotFoundWithVersionCheckingOptions()
     {
       # Issue #210, reported by @samwilson
@@ -81,6 +90,9 @@ class FriendlyErrors extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testUnsuccessfulCommand()
     {
         $expected = array();
@@ -140,7 +152,7 @@ class FriendlyErrors extends TestCase
         }
     }
 
-    protected function isVersion($version)
+    protected function isVersion(string $version): bool
     {
         exec('tesseract --version 2>&1', $output);
         return strpos($output[0], "tesseract $version") !== false;

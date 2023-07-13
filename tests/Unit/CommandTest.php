@@ -9,20 +9,20 @@ use thiagoalessio\TesseractOCR\Option;
 
 class CommandTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->customTempDir = __DIR__ . DIRECTORY_SEPARATOR . 'custom-temp-dir';
         mkdir($this->customTempDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $files = glob(join(DIRECTORY_SEPARATOR, array($this->customTempDir, '*')));
         array_map('unlink', $files);
         rmdir($this->customTempDir);
     }
 
-    public function testSimplestCommand()
+    public function testSimplestCommand(): void
     {
         $cmd = new TestableCommand('image.png');
 
@@ -30,7 +30,7 @@ class CommandTest extends TestCase
         $this->assertEquals("$expected", "$cmd");
     }
 
-    public function testCommandWithOption()
+    public function testCommandWithOption(): void
     {
         $cmd = new TestableCommand('image.png');
         $cmd->options[] = Option::lang('eng');
@@ -39,7 +39,7 @@ class CommandTest extends TestCase
         $this->assertEquals("$expected", "$cmd");
     }
 
-    public function testWithConfigFile()
+    public function testWithConfigFile(): void
     {
         $cmd = new TestableCommand('image.png');
         $cmd->configFile = 'hocr';
@@ -48,7 +48,7 @@ class CommandTest extends TestCase
         $this->assertEquals("$expected", "$cmd");
     }
 
-    public function testCustomTempDir()
+    public function testCustomTempDir(): void
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             $this->skip();
@@ -62,7 +62,7 @@ class CommandTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testCustomTempDirWindows()
+    public function testCustomTempDirWindows(): void
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
             $this->skip();
@@ -81,7 +81,7 @@ class CommandTest extends TestCase
         $this->assertEquals("$expected", "$actual");
     }
 
-    public function testCommandWithThreadLimit()
+    public function testCommandWithThreadLimit(): void
     {
         $cmd = new TestableCommand('image.png');
         $cmd->threadLimit = 2;
@@ -90,7 +90,7 @@ class CommandTest extends TestCase
         $this->assertEquals("$expected", "$cmd");
     }
 
-    public function testEscapeSpecialCharactersOnFilename()
+    public function testEscapeSpecialCharactersOnFilename(): void
     {
         $cmd = new TestableCommand('$@ ! ? "#\'_`foo.png');
 

@@ -6,6 +6,7 @@ use thiagoalessio\TesseractOCR\Command;
 
 class TestableCommand extends Command
 {
+    private string $version;
     public function __construct($image = null, $version = '3.05')
     {
         parent::__construct($image, 'tmpfile');

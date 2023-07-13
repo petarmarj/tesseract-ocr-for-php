@@ -7,7 +7,15 @@ class Process
     private $stdin;
     private $stdout;
     private $stderr;
+
+    /**
+     * @var false|resource
+     */
     private $handle;
+
+    /**
+     * @var float
+     */
     private $startTime;
 
     public function __construct($command)
@@ -30,7 +38,7 @@ class Process
         stream_set_blocking($this->stderr, 0);
     }
 
-    public function write($data, $len)
+    public function write($data, $len): bool
     {
         $total = 0;
         do {
@@ -40,7 +48,12 @@ class Process
     }
 
 
-    public function wait($timeout = 0)
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{out: string, err: string}
+     */
+    public function wait($timeout = 0): array
     {
         $running = true;
         $data = ["out" => "", "err" => ""];
@@ -53,7 +66,7 @@ class Process
         return $data;
     }
 
-    public function close()
+    public function close(): int
     {
         $this->closeStream($this->stdin);
         $this->closeStream($this->stdout);
@@ -61,17 +74,17 @@ class Process
         return proc_close($this->handle);
     }
 
-    public function closeStdin()
+    public function closeStdin(): void
     {
         $this->closeStream($this->stdin);
     }
 
-    private function hasTimedOut($timeout)
+    private function hasTimedOut($timeout): bool
     {
         return (($timeout > 0) &&  ($this->startTime + $timeout < microtime(true)));
     }
 
-    private function closeStream(&$stream)
+    private function closeStream(&$stream): void
     {
         if ($stream !== null) {
             fclose($stream);

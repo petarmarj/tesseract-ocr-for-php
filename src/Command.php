@@ -4,10 +4,22 @@ namespace thiagoalessio\TesseractOCR;
 
 class Command
 {
-    public $executable = 'tesseract';
-    public $useFileAsInput = true;
-    public $useFileAsOutput = true;
-    public $options = array();
+    public string $executable = 'tesseract';
+
+    /**
+     * @var true
+     */
+    public bool $useFileAsInput = true;
+
+    /**
+     * @var true
+     */
+    public bool $useFileAsOutput = true;
+
+    /**
+     * @var array
+     */
+    public array $options = array();
     public $configFile;
     public $tempDir;
     public $threadLimit;
@@ -21,7 +33,7 @@ class Command
         $this->outputFile = $outputFile;
     }
 
-    public function build()
+    public function build(): string
     {
         return "$this";
     }
@@ -48,7 +60,7 @@ class Command
         return join(' ', $cmd);
     }
 
-    public function getOutputFile($withExt = true)
+    public function getOutputFile(bool $withExt = true)
     {
         if (!$this->outputFile) {
             $this->outputFile = $this->getTempDir()
@@ -69,6 +81,9 @@ class Command
         return $this->tempDir ?: sys_get_temp_dir();
     }
 
+    /**
+     * @return string
+     */
     public function getTesseractVersion()
     {
         exec(self::escape($this->executable) . ' --version 2>&1', $output);
@@ -76,7 +91,10 @@ class Command
         return $outputParts[1];
     }
 
-    public function getAvailableLanguages()
+    /**
+     * @psalm-return list<mixed>
+     */
+    public function getAvailableLanguages(): array
     {
         exec(self::escape($this->executable) . ' --list-langs 2>&1', $output);
         array_shift($output);
@@ -84,7 +102,7 @@ class Command
         return $output;
     }
 
-    public static function escape($str)
+    public static function escape(string $str): string
     {
         $charlist = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? '$"`' : '$"\\`';
         return '"' . addcslashes($str, $charlist) . '"';

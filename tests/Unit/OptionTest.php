@@ -7,7 +7,7 @@ use thiagoalessio\TesseractOCR\Option;
 
 class OptionTest extends TestCase
 {
-    public function testPsm()
+    public function testPsm(): void
     {
         $psm = Option::psm(8);
         $this->assertEquals('-psm 8', $psm('3.05.01'));
@@ -16,6 +16,9 @@ class OptionTest extends TestCase
         $this->assertEquals('--psm 8', $psm('v5.0.0-alpha.20200328')); //issue #229
     }
 
+    /**
+     * @return void
+     */
     public function testOem()
     {
         $oem = Option::oem(2);
@@ -30,13 +33,16 @@ class OptionTest extends TestCase
         }
     }
 
-    public function testDpi()
+    public function testDpi(): void
     {
         $dpi = Option::dpi(300);
 
         $this->assertEquals('--dpi 300', $dpi());
     }
 
+    /**
+     * @return void
+     */
     public function testUserWords()
     {
         $userWords = Option::userWords('/path/to/words');
@@ -55,6 +61,9 @@ class OptionTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testUserPatterns()
     {
         $userPatterns = Option::userPatterns('/path/to/patterns');
@@ -73,7 +82,7 @@ class OptionTest extends TestCase
         }
     }
 
-    public function testTessdataDir()
+    public function testTessdataDir(): void
     {
         $tessdataDir = Option::tessdataDir('/path/to/tessdata');
         $this->assertEquals('--tessdata-dir "/path/to/tessdata"', $tessdataDir());
@@ -82,7 +91,7 @@ class OptionTest extends TestCase
         $this->assertEquals('--tessdata-dir "c:\\\\path\\\\to\\\\tessdata"', $tessdataDir());
     }
 
-    public function testLang()
+    public function testLang(): void
     {
         $lang = Option::lang('eng');
         $this->assertEquals('-l eng', $lang());
@@ -91,7 +100,7 @@ class OptionTest extends TestCase
         $this->assertEquals('-l eng+deu+jpn', $lang());
     }
 
-    public function testConfig()
+    public function testConfig(): void
     {
         $config = Option::config('var', 'value');
         $this->assertEquals('-c "var=value"', $config());
@@ -103,7 +112,7 @@ class OptionTest extends TestCase
         $this->assertEquals('-c "foo_bar_baz_chunky_bacon=value"', $config());
     }
 
-    public function testCheckMinVersion()
+    public function testCheckMinVersion(): void
     {
         Option::checkMinVersion('3.05', '4.0.0.20190314', 'option');
         Option::checkMinVersion('3.05', 'v4.0.0.20190314', 'option');

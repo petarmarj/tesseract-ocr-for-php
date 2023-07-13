@@ -4,7 +4,12 @@ namespace thiagoalessio\TesseractOCR\Tests\Common;
 
 class TestCase
 {
-    public function run()
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array<array{status: 'fail'|'pass'|'skip', msg?: string}>
+     */
+    public function run(): array
     {
         $results = array();
 
@@ -34,7 +39,12 @@ class TestCase
         return $results;
     }
 
-    protected function getTests()
+    /**
+     * @return string[]
+     *
+     * @psalm-return array<int<0, max>, string>
+     */
+    protected function getTests(): array
     {
         $isTest = function ($name) {
             return preg_match('/^test/', $name);
@@ -43,13 +53,22 @@ class TestCase
         return array_filter($methods, $isTest);
     }
 
-    protected function assertEquals($expected, $actual)
+    /**
+     * @param bool|null|string $expected
+     * @param bool|string $actual
+     *
+     * @return void
+     */
+    protected function assertEquals(string|bool|null $expected, string|bool|null $actual)
     {
         if ($expected != $actual) {
             throw new \Exception("\t\tExpected: $expected\n\t\t  Actual: $actual");
         }
     }
 
+    /**
+     * @return never
+     */
     protected function skip()
     {
         throw new SkipException();

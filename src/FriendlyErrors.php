@@ -4,7 +4,7 @@ namespace thiagoalessio\TesseractOCR;
 
 class FriendlyErrors
 {
-    public static function checkImagePath($image)
+    public static function checkImagePath($image): void
     {
         if (file_exists($image)) {
             return;
@@ -20,7 +20,7 @@ class FriendlyErrors
         throw new ImageNotFoundException($msg);
     }
 
-    public static function checkTesseractPresence($executable)
+    public static function checkTesseractPresence(string $executable): void
     {
         if (file_exists($executable)) {
             return;
@@ -48,7 +48,7 @@ class FriendlyErrors
         throw new TesseractNotFoundException($msg);
     }
 
-    public static function checkCommandExecution($command, $stdout, $stderr)
+    public static function checkCommandExecution($command, string $stdout, string $stderr): void
     {
         if ($command->useFileAsOutput) {
             $file = $command->getOutputFile();
@@ -76,7 +76,10 @@ class FriendlyErrors
         throw new UnsuccessfulCommandException($msg);
     }
 
-    public static function checkProcessCreation($processHandle, $command)
+    /**
+     * @param false|resource $processHandle
+     */
+    public static function checkProcessCreation($processHandle, $command): void
     {
         if ($processHandle !== false) {
             return;
@@ -92,7 +95,7 @@ class FriendlyErrors
         throw new UnsuccessfulCommandException($msg);
     }
 
-    public static function checkTesseractVersion($expected, $action, $command)
+    public static function checkTesseractVersion(string $expected, string $action, $command): void
     {
         $actual = $command->getTesseractVersion();
 
@@ -115,7 +118,7 @@ class FriendlyErrors
         throw new FeatureNotAvailableException($msg);
     }
 
-    public static function checkWritePermissions($path)
+    public static function checkWritePermissions($path): void
     {
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path));
