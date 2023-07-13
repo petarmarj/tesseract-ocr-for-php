@@ -5,29 +5,28 @@ namespace thiagoalessio\TesseractOCR;
 class Command
 {
     public string $executable = 'tesseract';
-
     /**
-     * @var true
+     * @var true|false
      */
     public bool $useFileAsInput = true;
 
     /**
-     * @var true
+     * @var true|false
      */
     public bool $useFileAsOutput = true;
 
     /**
      * @var array
      */
-    public array $options = array();
-    public $configFile;
-    public $tempDir;
-    public $threadLimit;
-    public $image;
-    public $imageSize;
-    private $outputFile;
+    public array $options = [];
+    public ?string $configFile = null;
+    public ?string $tempDir = null;
+    public ?string $threadLimit = null;
+    public ?string $image = null;
+    public ?string $imageSize = null;
+    private ?string $outputFile = null;
 
-    public function __construct($image = null, $outputFile = null)
+    public function __construct(?string $image = null, ?string $outputFile = null)
     {
         $this->image = $image;
         $this->outputFile = $outputFile;
@@ -41,7 +40,7 @@ class Command
     public function __toString()
     {
         $cmd = array();
-        if ($this->threadLimit) {
+        if (isset($this->threadLimit)) {
             $cmd[] = "OMP_THREAD_LIMIT={$this->threadLimit}";
         }
         $cmd[] = self::escape($this->executable);
@@ -53,14 +52,14 @@ class Command
         foreach ($this->options as $option) {
             $cmd[] = is_callable($option) ? $option($version) : "$option";
         }
-        if ($this->configFile) {
+        if (isset($this->configFile)) {
             $cmd[] = $this->configFile;
         }
 
         return join(' ', $cmd);
     }
 
-    public function getOutputFile(bool $withExt = true)
+    public function getOutputFile(bool $withExt = true): string
     {
         if (!$this->outputFile) {
             $this->outputFile = $this->getTempDir()
@@ -76,7 +75,7 @@ class Command
         return "{$this->outputFile}.{$ext}";
     }
 
-    public function getTempDir()
+    public function getTempDir(): string
     {
         return $this->tempDir ?: sys_get_temp_dir();
     }

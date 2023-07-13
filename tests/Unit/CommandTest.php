@@ -9,10 +9,15 @@ use thiagoalessio\TesseractOCR\Option;
 
 class CommandTest extends TestCase
 {
+    public string $customTempDir;
+    public string $threadLimit;
+
     public function setUp(): void
     {
         $this->customTempDir = __DIR__ . DIRECTORY_SEPARATOR . 'custom-temp-dir';
-        mkdir($this->customTempDir);
+        if (!file_exists($this->customTempDir)) {
+            mkdir($this->customTempDir);
+        }
     }
 
     public function tearDown(): void

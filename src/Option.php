@@ -13,7 +13,7 @@ class Option
     {
         return function ($version) use ($psm) {
             $version = preg_replace('/^v/', '', $version);
-            return (version_compare($version, 4, '>=') ? '-' : '') . "-psm $psm";
+            return (version_compare($version, "4", '>=') ? '-' : '') . "-psm $psm";
         };
     }
 

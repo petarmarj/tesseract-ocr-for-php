@@ -6,10 +6,15 @@ use thiagoalessio\TesseractOCR\Command;
 use thiagoalessio\TesseractOCR\Option;
 use thiagoalessio\TesseractOCR\FriendlyErrors;
 
+/**
+ * @method userWords(string $path)
+ * @method lang(...$args)
+ * @psalm-seal-methods
+ */
 class TesseractOCR
 {
-    public $command;
-    private $outputFile = null;
+    public Command $command;
+    private ?string $outputFile = null;
 
     public function __construct($image = null, $command = null)
     {
@@ -146,12 +151,15 @@ class TesseractOCR
         return $this->allowlist($allowlist);
     }
 
-    public function version()
+    public function version(): string
     {
         return $this->command->getTesseractVersion();
     }
 
-    public function availableLanguages()
+    /**
+     * @psalm-return list<mixed>
+     */
+    public function availableLanguages(): array
     {
         return $this->command->getAvailableLanguages();
     }

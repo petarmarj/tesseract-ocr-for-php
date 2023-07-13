@@ -4,9 +4,9 @@ namespace thiagoalessio\TesseractOCR;
 
 class Process
 {
-    private $stdin;
-    private $stdout;
-    private $stderr;
+    private mixed $stdin;
+    private mixed $stdout;
+    private mixed $stderr;
 
     /**
      * @var false|resource
@@ -34,11 +34,15 @@ class Process
         // This is can avoid deadlock on some cases
         // (when stderr buffer is filled up before writing
         // to stdout and vice-versa)
-        stream_set_blocking($this->stdout, 0);
-        stream_set_blocking($this->stderr, 0);
+        stream_set_blocking($this->stdout, false);
+        stream_set_blocking($this->stderr, false);
     }
 
-    public function write($data, $len): bool
+    /**
+     * @param null|string $data
+     * @param null|string $len
+     */
+    public function write(string|null $data, string|null $len): bool
     {
         $total = 0;
         do {

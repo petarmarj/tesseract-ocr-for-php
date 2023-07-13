@@ -9,6 +9,8 @@
 
 >
     <projectFiles>
+        <file name="src/test.php" />
+
         <directory name="src" />
         <directory name="tests" />
         <ignoreFiles>
